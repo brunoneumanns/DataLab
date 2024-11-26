@@ -1,7 +1,23 @@
 import copy
-from typing import List
+import json
+from typing import Dict, List
 
 from src.node import Node
+
+
+def read_experiment_setting(file_path: str) -> Dict:
+    """
+    Read the experiment setting from a JSON file.
+    
+    Attributes:
+    	file_path (str): Path to the file containing the JSON file.
+        
+    Returns:
+    	dict_setting (Dict): A experimental setting as a dictionary.
+    """
+    with open(file_path, 'r') as f:
+        dict_setting = json.load(f)
+    return dict_setting
 
 
 def get_distance(
