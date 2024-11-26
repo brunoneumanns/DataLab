@@ -4,6 +4,36 @@ from typing import List
 from src.node import Node
 
 
+def get_distance(
+    x1: float, 
+    y1: float, 
+    x2: float, 
+    y2: float, 
+    geography: str
+) -> float:
+  """
+  Calculate the distance between two coordinates.
+
+  Attributes:
+    x1 (float): The x-coordinate of the first point.
+    y1 (float): The y-coordinate of the first point.
+    x2 (float): The x-coordinate of the second point.
+    y2 (float): The y-coordinate of the second point.  
+    geography (str): The type of distance calculation ('MANHATTAN' or 'EUCLIDEAN').
+
+  Returns:
+    float: The distance between the two points.
+
+  Raises:
+    ValueError: If geography is not 'MANHATTAN' or 'EUCLIDEAN'.
+  """
+  if geography == 'MANHATTAN':
+    return abs(x1 - x2) + abs(y1 - y2)
+  if geography == 'EUCLIDEAN':
+    return math.hypot(x1 - x2, y1 - y2)
+  raise ValueError("Invalid geography value. Must be 'MANHATTAN' or 'EUCLIDEAN'")
+
+
 def read_nodes(file_path: str) -> List[Node]:
     """
     Read node data from a file. Return a list with the node objects.
