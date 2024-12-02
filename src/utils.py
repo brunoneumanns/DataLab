@@ -1,5 +1,8 @@
 import copy
+import itertools
 import json
+
+from math import factorial, pow
 from typing import Dict, List
 
 from src.node import Node
@@ -96,3 +99,94 @@ def read_nodes(file_path: str) -> List[Node]:
     lst_nodes.append(node_depot)
     
     return lst_nodes
+
+
+def get_vehicle_data(
+    number_of_vehicles: int,
+    absence_prob: float = 0.07,
+    time_horizon: float = 240.0,
+    cost_km: float = 0.00,
+    geography: str = "MANHATTAN",
+    vehicle_speed: float = 0.002,
+    balance: int = 2,
+    max_number_of_absences: int = 2,
+):
+    """
+    Read the experiment setting from a JSON file.
+    
+    Attributes:
+    	number_of_vehicles (int): Number of vehicles.
+        absence_prob (float): Probability that the caregiver operating the vehicle is absence.
+        time_horizon (float): Time in minutes that a vehicle can operate.
+        cost_km (float): The cost for each driven kilometer.
+        geography (str): Geography metric to consider.
+        vehicle_speed (float): Metric depicting vehicle speed.
+        balance (int): Parameter to balance assignments among caregivers.
+        max_number_of_absences: Maximal number of absences to consider.
+        
+    Returns:
+    	vehicle_data (Dict): A dictionary with the data related to the vehicle.
+    """
+    v = number_of_vehicles
+    p = absence_prob
+	
+    # Compute accumulated probabilities for absences
+    accumulated_prob = 0.0
+    for k in range(0, v + 1):
+        out = (
+            factorial(v) / (factorial(k) * factorial(v-k))
+        ) * pow(1-p, v-k) * pow(p, k)
+        accumulated_prob += out
+        print(f'Accumulated probability after {k} absences: {accumulated_prob}')
+        
+    # Compute probability for 'k' absences
+    for k in range(0, v + 1):
+        out = pow(1 - p, v - k) * pow(p, k)
+        print(f'Probability of {k} absences: {round(out, 8)}')
+    
+    # Create dictionary
+    vehicle_data = {
+        'time_horizon': time_horizon,
+        'cost_km': cost_km,
+        'geography': geography,
+        'vehicle_speed': vehicle_speed,
+        'balance': balance,
+        'number_of_vehicles': v,
+    }
+	
+    # List with the index for the vehicles
+    index_vehicles = [x for x in range(0, v)]
+   
+	# Scenario counter
+    s = 0
+    
+    # List with scenario data
+    scenarios = []
+
+    for k in range(max_number_of_absences+1):
+        print(f"Scenarios with {k} absences.")
+        # Probability of a scenario if there are k absenses
+        probability = pow(1-p, v-k) * pow(p, k)
+        
+        # Create possible combinations given the available vehicles
+        for av in set(itertools.combinations(index_vehicles, v-k)):
+            available_vehicles = list(av)
+            print(available_vehicles)
+            
+            # Create dictionary with scenario-dependent data
+            scenario = {
+                'scenario': s, 
+                'probability': probability, 
+                'available_vehicles': available_vehicles
+            }
+            
+            # Add scenario to the list
+            scenarios.append(scenario)
+            
+            # Update scenario counter
+            s += 1
+
+    vehicle_data['scenarios'] = scenarios
+        
+    return vehicle_data
+

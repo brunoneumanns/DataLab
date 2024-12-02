@@ -20,3 +20,14 @@ class ArcFormulation:
         
         # Depot replication in which vehicles end tours
         self.depot_end = self.lst_nodes[-1]  
+        
+        # Auxiliar indexes to control the design and manupulation of the model
+        self.lst_indx_nodes = []
+        self.lst_indx_customers = []
+        self.lst_indx_vehicles = []
+        self.lst_indx_vehicles_with_dummy = []
+        self.lst_indx_scenarios = []
+        self.indx_depot_start = None
+        self.indx_depot_end = None
+        self.indx_vehicle_dummy = None
+
