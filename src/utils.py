@@ -195,6 +195,7 @@ def get_vehicle_data(
             s += 1
 
     vehicle_data['scenarios'] = scenarios
+    vehicle_data['number_of_scenarios'] = len(scenarios)
         
     return vehicle_data
 
