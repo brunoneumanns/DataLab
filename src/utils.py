@@ -53,12 +53,16 @@ def get_distance(
   raise ValueError("Invalid geography value. Must be 'MANHATTAN' or 'EUCLIDEAN'")
 
 
-def read_nodes(file_path: str) -> List[Node]:
+def read_nodes(
+    file_path: str,
+	number_of_nodes: int,
+) -> List[Node]:
     """
     Read node data from a file. Return a list with the node objects.
     
     Attributes:
         file_path (str): Path to the file containing the node data.
+        number_of_nodes (int): Number of customer nodes from the instance to consider.
     
     Returns:
         List[Node]: A list with Node objects.
@@ -90,6 +94,10 @@ def read_nodes(file_path: str) -> List[Node]:
             
             # Add node object to the list
             lst_nodes.append(node)
+            
+            # Check if the desired number of nodes has been already loaded
+            if node_no == number_of_nodes:
+                break
     
     # Make a copy of the node depot with node index set as n+1
     # Assume no service time in the depot
