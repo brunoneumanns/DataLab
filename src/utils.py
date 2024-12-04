@@ -110,7 +110,7 @@ def get_vehicle_data(
     vehicle_speed: float = 0.002,
     balance: int = 2,
     max_number_of_absences: int = 2,
-):
+) -> Dict:
     """
     Read the experiment setting from a JSON file.
     
